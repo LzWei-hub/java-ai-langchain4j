@@ -1,42 +1,49 @@
 # 医疗智能小智
-这个项目是一个基于Spring Boot和LangChain4j的智能医疗伴诊助手系统，主要功能是提供AI医疗咨询和预约挂号服务。以下是核心组件的解释：
-一、技术栈
-核心框架：
-Spring Boot 3.2.6
-LangChain4j 1.0.0-beta3（AI集成）
-MyBatis-Plus 3.5.11（持久层）
-AI模型集成：
-阿里百炼平台（qwen-max模型）
-DeepSeek推理模型
-Ollama本地模型
-支持流式输出（WebFlux）
-数据库：
-MySQL（预约数据存储）
-MongoDB（聊天记忆持久化）
-向量存储：
-Pinecone（知识库向量检索）
-内存向量存储（测试用）
- 
-二、核心功能模块
-1. AI助手接口
-Assistant：基础聊天接口（使用通义千问模型）
-MemoryChatAssistant：带记忆的聊天（支持上海话回复）
-SeparateChatAssistant：分离式多轮对话（粤语回复+工具调用）
-XiaozhiAgent：医疗伴诊核心Agent（流式输出+预约工具+知识库检索）
-2. 工具集成
-AppointmentTools：
-bookAppointment()：预约挂号
-cancelAppointment()：取消预约
-queryDepartment()：号源查询
-CalculatorTools：数学计算工具
-3. 记忆管理
-MongoChatMemoryStore：
-将聊天记录持久化到MongoDB
-支持按memoryId隔离对话上下文
-4. 知识库检索（RAG）
-EmbeddingStoreConfig：
-使用Pinecone存储向量
-结合阿里云文本向量模型text-embedding-v3
-RAGTest：
-支持加载TXT/PDF文档到向量库
-实现基于语义的检索增强
+这是一个基于Spring Boot和LangChain4J构建的AI聊天助手项目，名为"伴诊小智"。该项目主要实现了智能医疗客服功能，具备对话记忆、工具调用和知识检索等能力。
+
+## 项目概述
+
+- **项目名称**: 伴诊小智 (Xiaozhi Assistant)
+- **主要功能**: 智能医疗客服，提供医院导诊、预约挂号等服务
+- **核心技术**: Spring Boot + LangChain4J + 阿里通义千问 + MongoDB + MySQL
+
+## 核心组件
+
+### 1. AI助手类型
+- [Assistant](file://D:\JavaCode\java-ai-langchain4j\src\main\java\com\ciwei\java\ai\langchain4j\assistant\Assistant.java#L7-L10): 基础AI助手接口
+- [MemoryChatAssistant](file://D:\JavaCode\java-ai-langchain4j\src\main\java\com\ciwei\java\ai\langchain4j\assistant\MemoryChatAssistant.java#L8-L17): 带对话记忆的助手
+- [SeparateChatAssistant](file://D:\JavaCode\java-ai-langchain4j\src\main\java\com\ciwei\java\ai\langchain4j\assistant\SeparateChatAssistant.java#L10-L38): 支持多轮独立对话的助手
+- [XiaozhiAgent](file://D:\JavaCode\java-ai-langchain4j\src\main\java\com\ciwei\java\ai\langchain4j\assistant\XiaozhiAgent.java#L10-L20): 主要的医疗助手，具备工具调用和知识检索能力
+
+### 2. 工具集成
+- [AppointmentTools](file://D:\JavaCode\java-ai-langchain4j\src\main\java\com\ciwei\java\ai\langchain4j\tools\AppointmentTools.java#L12-L65): 预约挂号相关工具
+- [CalculatorTools](file://D:\JavaCode\java-ai-langchain4j\src\main\java\com\ciwei\java\ai\langchain4j\tools\CalculatorTools.java#L10-L28): 计算工具（加法、平方根）
+
+### 3. 数据存储
+- **MongoDB**: 存储对话记忆
+- **MySQL**: 存储预约信息
+- **Pinecone**: 向量数据库，存储医疗知识库
+
+### 4. 主要配置
+- 使用阿里通义千问作为主要大语言模型
+- 集成DeepSeek模型作为备选
+- 配置了向量存储用于RAG（检索增强生成）
+- 实现了对话记忆的持久化存储
+
+## 核心业务流程
+
+1. 用户通过REST API与"伴诊小智"交互
+2. 系统根据用户问题判断是否需要调用工具（如预约挂号）
+3. 必要时从向量数据库检索相关医疗知识
+4. 结合对话历史和检索到的信息生成回答
+5. 支持流式输出，提供更好的用户体验
+
+## 项目特点
+
+- **多模型支持**: 集成多个AI模型提供商
+- **对话记忆**: 支持多轮对话和历史记录存储
+- **工具调用**: 可以执行具体的业务操作（如预约挂号）
+- **知识检索**: 通过RAG技术增强AI回答的准确性
+- **流式响应**: 支持实时流式输出，提升交互体验
+
+这个项目是一个完整的AI医疗助手解决方案，可以用于医院的智能客服系统。
